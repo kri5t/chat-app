@@ -1,0 +1,8 @@
+{
+  "name": "chat-app-wunderlist",
+  "version": "0.0.1",
+  "description": "Real time chat application",
+  "dependencies": {
+    "express": "^4.12.3"
+  }
+}
