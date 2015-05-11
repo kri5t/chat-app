@@ -27,8 +27,12 @@ footer{
     overflow-y: auto;
 }
 #messages li {
-    padding: 5px 10px;
+    padding: 10px 0;
 }
-#messages li:nth-child(odd) {
-    background: #eee;
+#messages .date{
+    font-size: 12px;
+    color: grey;
+}
+#messages .name{
+    font-weight: bold;
 }

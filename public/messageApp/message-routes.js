@@ -12,6 +12,12 @@
 					params: {
 						'action': ''
 					}
+				},
+				getMessagesFrom: {
+					method: 'GET',
+					params: {
+						'action': 'from'
+					}
 				}
 			});
 		}]);

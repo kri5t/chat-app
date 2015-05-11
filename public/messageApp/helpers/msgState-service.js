@@ -4,7 +4,7 @@
 ;(function(){
 	'use strict';
 	angular.module('messageApp')
-		.factory('msgstate', function(){
+		.factory('msgstate', ['$rootScope', function($rootScope){
 			var self = this;
 			self.offline = false;
 
@@ -21,10 +21,11 @@
 
 			function goOnline(){
 				self.offline = false;
+				$rootScope.$broadcast('online');
 				return self.offline;
 			}
 			//End private functions
 
 			return self;
-		});
+		}]);
 })();

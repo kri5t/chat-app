@@ -3,6 +3,7 @@ var app = require('express')(),
 	io = require('socket.io')(http),
 	express = require('express'),
 	moment = require('moment'),
+	SHA256 = require('crypto-js/sha256'),
 	mongoose = require('mongoose');
 
 //Setup mongoDb for persisting messages:
@@ -31,15 +32,19 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/messages/from', function(req, res){
+	var date = moment(req.query.date);
+	console.log(date);
+	Message.find({'date': { $gt: date.toDate()}}, function(err, messages){
+		console.log(err, messages);
+		var sortedMessages = sortMessages(messages);
+		res.send({messages: sortedMessages});
+	});
+});
+
 app.get('/messages', function(req, res){
 	Message.find(function(err, messages){
-		var sortedMessages = {};
-
-		for(var i = 0; i < messages.length; i++){
-			var message = messages[i];
-			sortedMessages[message.stamp] = message;
-		}
-
+		var sortedMessages = sortMessages(messages);
 		res.send({messages: sortedMessages});
 	});
 });
@@ -48,19 +53,34 @@ app.get('/messages', function(req, res){
 //Socket io:
 io.on('connection', function(socket){
 	socket.on('message', function(msg){
-		var savedTime = moment().add(-2, 'hours');
+		var date = moment(msg.date);
+		var stamp = SHA256(msg.name+msg.message);
 		var message = new Message();
-		message.stamp = savedTime.format("YYYY-MM-DDTHH:mm:ss:SSS");
-		message.name = "kri5t";
-		message.date = savedTime;
-		message.message = msg;
+		message.stamp = date.format('YYYY-MM-DDTHH:mm:ss:SSS') + stamp;
+		message.name = msg.name;
+		message.date = date;
+		message.message = msg.message;
 
 		message.save(function(err, message){
-			io.emit('message', message);
+			socket.broadcast.emit('message', message);
 		});
 	});
 });
 //End: Socket io
+
+//Helpers
+
+function sortMessages(messages){
+	var sortedMessages = {};
+
+	for(var i = 0; i < messages.length; i++){
+		var message = messages[i];
+		sortedMessages[message.stamp] = message;
+	}
+	return sortedMessages;
+}
+
+//End helpers
 
 http.listen(3000, function(){
 	console.log('listening on *:3000');
