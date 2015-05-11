@@ -50,7 +50,7 @@ io.on('connection', function(socket){
 	socket.on('message', function(msg){
 		var savedTime = moment().add(-2, 'hours');
 		var message = new Message();
-		message.stamp = savedTime.format("YYYY-MM-DDTHH:mm:SSS");
+		message.stamp = savedTime.format("YYYY-MM-DDTHH:mm:ss:SSS");
 		message.name = "kri5t";
 		message.date = savedTime;
 		message.message = msg;

@@ -4,10 +4,12 @@
 ;(function(){
 	'use strict';
 	angular.module('messageApp')
-		.controller('messageController', ['$scope', 'broadcast', 'routes', function($scope, broadcast, routes){
+		.controller('messageController', ['$scope', '$document', 'broadcast', 'routes', function($scope, $document, broadcast, routes){
 			var self = this;
 			self.messages = [];
 			self.message = "";
+			self.messageBuffer = [];
+			self.offline = false;
 			init();
 
 			//Public functions
@@ -21,11 +23,13 @@
 				});
 
 				$scope.$on('message-received', function (event, data) {
-					console.log("RECEIVED");
-					console.log(data.stamp);
 					self.messages[data.stamp] = data;
-					console.log(self.messages);
+					$scope.$apply();
+					$scope.$broadcast('scroll-to-bottom');
 				});
+			}
+
+			function scrollToBottomOfMessages(){
 			}
 
 			function sendMessage(){

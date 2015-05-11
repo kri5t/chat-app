@@ -1,47 +1,62 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title></title>
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-</head>
-<body ng-app="messageApp">
-<div class="container" ng-controller="messageController as msgCtrl">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Chat app</h1>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+        <link href="/css/style.css" rel="stylesheet">
+    </head>
+    <body ng-app="messageApp" ng-controller="messageController as msgCtrl">
+        <header class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="headline">Message app</h2>
+                    <div class="connection-button" connection-button></div>
+                </div>
+            </div>
+        </header>
+        <div class="container">
+            <div class="row message-container">
+                <div class="col-md-12">
+                    <ul id="messages" resize-height scroll-to-bottom>
+                        <li class="message" ng-repeat="message in msgCtrl.messages track by message._id" on-finish-render>
+                            <span>{{message.date | msgAppDate}}</span>
+                            <span>{{message.message}}</span>
+                            <span>{{}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <ul id="messages">
-                <li class="message" ng-repeat="message in msgCtrl.messages track by message._id">
-                    <span>{{message.date | msgAppDate}}</span>
-                    <span>{{message.message}}</span>
-                    <span>{{}}</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <form ng-submit="msgCtrl.sendMessage()">
-        <div class="input-group">
-            <input ng-model="msgCtrl.message" type="text" class="form-control" id="messageInput" autocomplete="off">
-            <div ng-click="msgCtrl.sendMessage()" class="btn btn-sm btn-primary input-group-addon">Send</div>
-        </div>
-    </form>
-</div>
-<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular-resource.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.8.0/lodash.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/messageApp/message-module.js"></script>
-<script src="/messageApp/message-routes.js"></script>
-<script src="/messageApp/broadcast-service.js"></script>
-<script src="/messageApp/message-controller.js"></script>
-<script src="/messageApp/msgAppDate-filter.js"></script>
-</body>
+        <footer class="footer container">
+            <div class="row">
+                <div class="col-md-12">
+                    <form ng-submit="msgCtrl.sendMessage()">
+                        <div class="input-group">
+                            <input ng-model="msgCtrl.message" type="text" class="form-control" id="messageInput" autocomplete="off">
+                            <div ng-click="msgCtrl.sendMessage()" class="btn btn-sm btn-primary input-group-addon">Send</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </footer>
+        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular-resource.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.8.0/lodash.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/messageApp/message-module.js"></script>
+        <script src="/messageApp/message-routes.js"></script>
+        <script src="/messageApp/broadcast-service.js"></script>
+        <script src="/messageApp/message-controller.js"></script>
+        <script src="/messageApp/msgAppDate-filter.js"></script>
+        <script src="/messageApp/resizeHeight-directive.js"></script>
+        <script src="/messageApp/msgState-service.js"></script>
+        <script src="/messageApp/connectionButton-directive.js"></script>
+        <script src="/messageApp/scrollToBottom-directive.js"></script>
+        <script src="/messageApp/onFinishRender-directive.js"></script>
+    </body>
 </html>
