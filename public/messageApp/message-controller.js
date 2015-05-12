@@ -7,6 +7,7 @@
 		.controller('messageController', ['$scope', '$document', 'broadcast', 'routes', 'msgstate',
 			function($scope, $document, broadcast, routes, msgstate){
 				var self = this;
+				self.messageObj = {};
 				self.messages = [];
 				self.message = "";
 				self.offline = false;
@@ -27,17 +28,14 @@
 
 					$scope.$on('online', function(event, data){
 						getLostMessages();
-						sendBuffer();
 					});
 				}
 
 				function getMessagesFromServer() {
 					routes.getMessages(function(result){
-						self.messages = result.messages;
-						_.forEach(self.messages, function(message){
-							self.lastSeenMessage = message;
-						});
+						self.messageObj = result.messages;
 						checkBuffer();
+						messageObjToSortedArray(false);
 					});
 				}
 
@@ -46,7 +44,8 @@
 						if(msgstate.isOffline())
 							return;
 
-						self.messages[data.stamp] = data;
+						self.messageObj[data.stamp] = data;
+						messageObjToSortedArray(false);
 						$scope.$apply();
 						$scope.$broadcast('scroll-to-bottom');
 					});
@@ -54,7 +53,7 @@
 
 				function checkBuffer() {
 					_.forEach(msgstate.getSavedMessages(), function(bufferedMessage){
-						self.messages[bufferedMessage.stamp] = bufferedMessage;
+						self.messageObj[bufferedMessage.stamp] = bufferedMessage;
 					});
 				}
 
@@ -79,7 +78,8 @@
 					else
 						broadcast.sendMessage(msgObj);
 
-					self.messages[msgObj.stamp] = msgObj;
+					self.messageObj[msgObj.stamp] = msgObj;
+					messageObjToSortedArray(true);
 					self.message = "";
 				}
 
@@ -93,9 +93,22 @@
 				function getLostMessages(){
 					routes.getMessagesFrom({ date: self.lastSeenMessage.date }, function(result){
 						_.forEach(result.messages, function(message){
-							self.messages[message.stamp] = message;
-						})
+							self.messageObj[message.stamp] = message;
+						});
+						sendBuffer();
+						messageObjToSortedArray(false);
 					});
+				}
+
+				function messageObjToSortedArray(ownMessage){
+					var values = _.values(self.messageObj);
+					var sortedMessages = _.sortBy(values, function(value){
+						return value.stamp;
+					});
+					if(!ownMessage)
+						self.lastSeenMessage = sortedMessages[sortedMessages.length-1];
+
+					self.messages = sortedMessages;
 				}
 				//End private functions
 				return self;

@@ -36,7 +36,7 @@ My chat application should probably also implement some kind of chat room capabi
 
 **What were some of the trade offs you made when building this application? Why were these acceptable tradeoffs? **
 
-Right now I am using a hashset(js object) to store and sort all my messages and to avoid dupes in the chatlog. This method is not future proof since the order of the object properties are not guaranteed. If this was not a test application I would have to convert the object to an array and sort it the old fashioned way. Also I would implement a smart insert into the array of messages when going back online; since I can expect the new messages to follow the last seen thus minimizing the set I have to reorder.
+Right now I am using a hashset(js object) to avoid dupes in the chatlog. And I am doing an old fashioned sort of the array. To make this more efficient I would use a [SortedMap](http://www.collectionsjs.com/sorted-map) instead to avoid dupes and keep the sort order.
 
 I do not listen on the `offline event` from the browser and instead I simulate it by giving the user a button to click. This was done to make testing easier and because the cross browser implementation of the `offline event` is not uniform.
 
@@ -46,11 +46,13 @@ I am only using the local buffer when the button is clicked. If this was to go l
 
 I have already answered some of this with running buffer, using an array and sorting it to ensure message placement and listening to the offline event.
 
-Also I would like to add a login functionality; so the messages can be associated to a user when he/she logs back in.
+I would like to add a login functionality; so the messages can be associated to a user when he/she logs back in.
 
 I also thought it would be nice to add a Wunderlist button that can add a chat message to a list in the users wunderlist account.
 
 I would like to add chat rooms to the application using socket io to control it.
+
+If this was a serious project I would need to setup automatic deployment, task runners and bundling e.g. [Browserify](http://browserify.org/)
 
 Last the design is maybe a bit to minimalistic even for a scandinavian like me.
 
@@ -64,4 +66,4 @@ I use the format:
 
 `YYYY-MM-DDTHH:mm:ss:SSS + a hash of the (username+message)`
 
-This is a sortable format and makes for a unique stamp for the message. I can then use a hashset to avoid duplicates in my data. Right now I am just portraying the ordering of the hashset because it is linear in the browser; but if this was to go into production I would probably need to sort the array by the stamp given above (as explained already).
+This is a sortable format and makes for a unique stamp for the message. I can then use a hashset to avoid duplicates in my data and last I map them into pairs and sort the array. This can be done smarter with some more time and the use of a [SortedMap](http://www.collectionsjs.com/sorted-map)
