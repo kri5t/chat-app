@@ -63,7 +63,7 @@
 						message: self.message,
 						name: msgstate.getName(),
 						date: date.toDate(),
-						stamp: date.format('YYYY-MM-DDTHH:mm:ss:SSS') + CryptoJS.SHA256(msgstate.getName()+self.message)
+						stamp: date.format('YYYYMMDDTHHmmssSSS') + CryptoJS.SHA256(msgstate.getName()+self.message)
 					}
 				}
 
@@ -101,9 +101,9 @@
 				}
 
 				function messageObjToSortedArray(ownMessage){
-					var values = _.values(self.messageObj);
-					var sortedMessages = _.sortBy(values, function(value){
-						return value.stamp;
+					var messages = _.values(self.messageObj);
+					var sortedMessages = _.sortBy(messages, function(message){
+						return message.date;
 					});
 					if(!ownMessage)
 						self.lastSeenMessage = sortedMessages[sortedMessages.length-1];
