@@ -3,14 +3,14 @@ A real time chat application with support for offline mode. This chat applicatio
 
 # Install
 
-git clone https://github.com/kri5t/chat-app
+`git clone https://github.com/kri5t/chat-app`
 
-npm install
+`npm install`
 
-node server.js
+`node server.js`
 
-This application assumes there is a local mongodb installed and that the node package manager og node server is installed globally.
-If the mongodb is running elsewhere configure the ./server/config.js to point at your server. You can also change the port by setting the environment variable when starting the server.
+This application assumes there is a local mongodb installed and that the node package manager and node server is installed globally.
+If the mongodb is running elsewhere configure the `./server/config.js` to point at your server. You can also change the port by setting the environment variable(`PORT`) when starting the server.
 
 [Demo](http://stoggle.dk:9000/)
 
