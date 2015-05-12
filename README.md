@@ -2,8 +2,11 @@
 A real time chat application with support for offline mode. This chat application allows the users to go offline while chatting and will sync and save the messages to the server once it goes online again. It stores the state of the app locally and buffers the messages when you go offline.
 
 # Install
+
 git clone https://github.com/kri5t/chat-app
+
 npm install
+
 node server.js
 
 This application assumes there is a local mongodb installed and that the node package manager og node server is installed globally.
