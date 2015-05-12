@@ -34,16 +34,14 @@ app.get('/', function(req, res){
 
 app.get('/messages/from', function(req, res){
 	var date = moment(req.query.date);
-	console.log(date);
-	Message.find({'date': { $gt: date.toDate()}}, function(err, messages){
-		console.log(err, messages);
+	Message.where('date').gt(date.toDate()).exec(function(err, messages){
 		var sortedMessages = sortMessages(messages);
 		res.send({messages: sortedMessages});
 	});
 });
 
 app.get('/messages', function(req, res){
-	Message.find(function(err, messages){
+	Message.find().exec(function(err, messages){
 		var sortedMessages = sortMessages(messages);
 		res.send({messages: sortedMessages});
 	});
@@ -55,13 +53,13 @@ io.on('connection', function(socket){
 	socket.on('message', function(msg){
 		var date = moment(msg.date);
 		var stamp = SHA256(msg.name+msg.message);
-		var message = new Message();
-		message.stamp = date.format('YYYY-MM-DDTHH:mm:ss:SSS') + stamp;
-		message.name = msg.name;
-		message.date = date;
-		message.message = msg.message;
 
-		message.save(function(err, message){
+		new Message({
+			stamp: date.format('YYYY-MM-DDTHH:mm:ss:SSS') + stamp,
+			name: msg.name,
+			date: date,
+			message: msg.message
+		}).save(function(err, message){
 			socket.broadcast.emit('message', message);
 		});
 	});
@@ -69,7 +67,6 @@ io.on('connection', function(socket){
 //End: Socket io
 
 //Helpers
-
 function sortMessages(messages){
 	var sortedMessages = {};
 
@@ -79,7 +76,6 @@ function sortMessages(messages){
 	}
 	return sortedMessages;
 }
-
 //End helpers
 
 http.listen(3000, function(){

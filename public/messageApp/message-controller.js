@@ -11,6 +11,7 @@
 			self.messageBuffer = [];
 			self.offline = false;
 			self.lastSeenMessage = {};
+			self.name = "kri5t";
 			init();
 
 			//Public functions
@@ -36,14 +37,8 @@
 				});
 
 				$scope.$on('online', function(event, data){
-					//Send the buffer
-					_.forEach(self.messageBuffer, function(bufferedMessage){
-						broadcast.sendMessage(bufferedMessage);
-					});
-					//Retrieve lost messages
-					routes.getMessagesFrom({ date: self.lastSeenMessage.date }, function(){
-
-					});
+					getLostMessages();
+					sendBuffer();
 				});
 			}
 
@@ -51,9 +46,9 @@
 				var date = moment();
 				return {
 					message: self.message,
-					name: "kri5t",
+					name: self.name,
 					date: date.toDate(),
-					stamp: date.format('YYYY-MM-DDTHH:mm:ss:SSS')
+					stamp: date.format('YYYY-MM-DDTHH:mm:ss:SSS') + CryptoJS.SHA256(self.name+self.message)
 				}
 			}
 
@@ -70,6 +65,20 @@
 
 				self.messages[msgObj.stamp] = msgObj;
 				self.message = "";
+			}
+
+			function sendBuffer(){
+				_.forEach(self.messageBuffer, function(bufferedMessage){
+					broadcast.sendMessage(bufferedMessage);
+				});
+			}
+
+			function getLostMessages(){
+				routes.getMessagesFrom({ date: self.lastSeenMessage.date }, function(result){
+					_.forEach(result.messages, function(message){
+						self.messages[message.stamp] = message;
+					})
+				});
 			}
 			//End private functions
 			return self;
