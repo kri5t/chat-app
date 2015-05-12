@@ -42,6 +42,8 @@ I do not listen on the `offline event` from the browser and instead I simulate i
 
 I am only using the local buffer when the button is clicked. If this was to go live I would probably always use the buffer to make sure the message was saved on the server before I remove it locally. This is done to avoid loss of data when going from online to offline mode; since it normally takes some time for the browser to register that.
 
+If this was going to be a serious app test driven development would have been a better approach. Right now I did not have the time to setup the tests and the application but automatic testing is never a good tradeoff.
+
 **Given more time, what improvements or optimizations would you want to add later?**
 
 I have already answered some of this with running buffer, using an array and sorting it to ensure message placement and listening to the offline event.
