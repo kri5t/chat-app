@@ -3,5 +3,9 @@
  */
 ;(function(){
 	'use strict';
-	angular.module('messageApp', ['ngResource']);
+	angular.module('messageApp', ['ngResource', 'LocalStorageModule'])
+		.config(function (localStorageServiceProvider) {
+			localStorageServiceProvider
+				.setPrefix('msgApp');
+		});
 })();

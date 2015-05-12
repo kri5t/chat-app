@@ -4,25 +4,88 @@
 ;(function(){
 	'use strict';
 	angular.module('messageApp')
-		.factory('msgstate', ['$rootScope', function($rootScope){
-			var self = this;
-			self.offline = false;
+		.factory('msgstate', ['$rootScope', 'localStorageService', function($rootScope, localStorageService){
+			var self = this,
+				offline = false,
+				messageBuffer = [],
+				name = "Anonymous";
 
 			//Public functions
+			self.init = init;
 			self.goOffline = goOffline;
 			self.goOnline = goOnline;
+			self.saveMessage = saveMessage;
+			self.getSavedMessages = getSavedMessages;
+			self.goOnline = goOnline;
+			self.isOffline = isOffline;
+			self.setName = setName;
+			self.getName  = getName;
+			self.clearSavedMessage  = clearSavedMessage;
 			//End public functions
 
 			//Private functions
+			function init(){
+				var ss = getStoredState();
+
+				if(ss){
+					name = ss.name || "Anonymous";
+					messageBuffer = ss.messageBuffer || [];
+					offline = ss.offline || false;
+				}
+			}
+
 			function goOffline(){
-				self.offline = true;
-				return self.offline;
+				offline = true;
+				storeState();
+				return offline;
 			}
 
 			function goOnline(){
-				self.offline = false;
+				offline = false;
 				$rootScope.$broadcast('online');
-				return self.offline;
+				storeState();
+				return offline;
+			}
+
+			function saveMessage(message){
+				messageBuffer.push(message);
+				storeState();
+			}
+
+			function getSavedMessages(){
+				return messageBuffer;
+			}
+
+			function clearSavedMessage(){
+				messageBuffer = [];
+				storeState();
+			}
+
+			function isOffline(){
+				return offline;
+			}
+
+			function storeState(){
+				var state = {
+					name: name,
+					messageBuffer: messageBuffer,
+					offline: offline
+				};
+
+				localStorageService.set("state", state);
+			}
+
+			function getStoredState(){
+				return localStorageService.get("state");
+			}
+
+			function getName(){
+				return name;
+			}
+
+			function setName(username){
+				name = username;
+				storeState();
 			}
 			//End private functions
 
