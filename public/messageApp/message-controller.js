@@ -63,7 +63,7 @@
 						message: self.message,
 						name: msgstate.getName(),
 						date: date.toDate(),
-						stamp: date.format('YYYYMMDDTHHmmssSSS') + CryptoJS.SHA256(msgstate.getName()+self.message)
+						stamp: date.format('YYYY-MM-DDTHH:mm:ss:SSS') + CryptoJS.SHA256(msgstate.getName()+self.message)
 					}
 				}
 
