@@ -1,9 +1,9 @@
-var app = require('express')(),
-	http = require('http').Server(app),
-	io = require('socket.io')(http),
-	express = require('express'),
-	mongoose = require('mongoose'),
-	config = require('./server/config.js');
+const app = require('express')(),
+	  http = require('http').Server(app),
+	  io = require('socket.io')(http),
+	  express = require('express'),
+	  mongoose = require('mongoose'),
+	  config = require('./server/config.js');
 
 //Setup mongoDb for persisting messages:
 mongoose.connect(config.db);

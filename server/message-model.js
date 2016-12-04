@@ -2,9 +2,10 @@
  * Created by kristian on 12/05/15.
  */
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
-var messageSchema = mongoose.Schema({
+const messageSchema = mongoose.Schema({
 	name: String,
 	date: Date,
 	stamp: String,
